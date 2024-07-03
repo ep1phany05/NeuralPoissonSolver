@@ -1,0 +1,13 @@
+tensorboard
+configargparse
+opencv-python
+tqdm
+numpy==1.26.4
+matplotlib
+torch
+torchvision
+torchsummary
+scikit-learn
+loguru
+scipy
+jupyter

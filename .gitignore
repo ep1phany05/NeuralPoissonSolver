@@ -1,0 +1,14 @@
+.idea
+.vscode
+venv
+.DS_Store
+
+**/.ipynb_checkpoints
+**/__pycache__
+*.npy
+*.npz
+*.dae
+logs
+data
+outinfo
+results

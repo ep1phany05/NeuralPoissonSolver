@@ -1,0 +1,5 @@
+exp_name = generation_1
+root_dir = results/scene_1/hashsiren/max/
+
+
+blending_mode = max
