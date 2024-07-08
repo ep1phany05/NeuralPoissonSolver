@@ -2,7 +2,7 @@ tensorboard
 configargparse
 opencv-python
 tqdm
-numpy==1.26.4
+numpy
 matplotlib
 torch
 torchvision
