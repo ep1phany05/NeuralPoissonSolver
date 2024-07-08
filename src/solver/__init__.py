@@ -42,30 +42,6 @@ def to_matlab(arr):
     return np.uint8(np.clip(arr + 0.5, 0, 255))
 
 
-def circshift(A, K):
-    """
-    Circularly shift the elements of a 2D array.
-
-    Parameters:
-    A (numpy.ndarray): Input 2D array to be shifted.
-    K (tuple): A tuple (shift_num_1, shift_num_2) representing the shift along each axis.
-
-    Returns:
-    numpy.ndarray: The circularly shifted array.
-    """
-    h, w = A.shape[0], A.shape[1]
-    shift_num_1, shift_num_2 = K
-    if shift_num_1 < 0:
-        A = np.vstack((A[-shift_num_1:, :], A[:-shift_num_1, :]))
-    else:
-        A = np.vstack((A[(h - shift_num_1):, :], A[:(h - shift_num_1), :]))
-    if shift_num_2 > 0:
-        A = np.hstack((A[:, (w - shift_num_2):], A[:, :(w - shift_num_2)]))
-    else:
-        A = np.hstack((A[:, -shift_num_2:], A[:, :-shift_num_2]))
-    return A
-
-
 def dilate_2d(roi, kernel_size=5):
     """
     Apply 2D dilation to a region of interest (ROI) using a specified kernel size.

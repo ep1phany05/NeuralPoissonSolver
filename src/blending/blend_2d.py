@@ -9,7 +9,7 @@ from argparse import Namespace
 
 from src.models.diner.diner import DINER
 from src.solver import to_matlab
-from src.solver.grad_operator import blend_grads, blend_grads_np
+from src.solver.grad_operator import blend_grads
 from src.solver.neural_poisson_solver import solver_2d
 from src.common import setup_seed, logger, get_optimizer, get_scheduler, get_current_lr
 
@@ -74,7 +74,6 @@ def config_parser():
 
     # Path loading of varrois files and data
     parser.add_argument("--config", is_config_file=True, help="Path to the common config file")
-    parser.add_argument("--exp_name", type=str, default="generation_1", help="Name of the experiment")
     parser.add_argument("--save_dir", type=str, default="results/2d/scene_1/", help="Path to save the blended inr")
     parser.add_argument("--root_dir", type=str, default="data/2d/scene_1/", help="Path to the pretrained data")
 
@@ -85,10 +84,10 @@ def config_parser():
     # Parameters for blending
     parser.add_argument("--blend_mode", type=str, default="max", choices=["replace", "average", "max", "sum"], help="Blending mode")
     parser.add_argument("--num_epochs", type=int, default=2500, help="Number of training epochs")
-    parser.add_argument("--loss_type", type=str, default="mse", help="Type of loss function")
-    parser.add_argument("--lr", type=float, default=5e-4, help="Learning rate")
+    parser.add_argument("--use_numpy", type=bool, default=False, help="Whether use numpy to train the model")
 
     # Parameters for optimizer & scheduler
+    parser.add_argument("--lr", type=float, default=5e-4, help="Learning rate")
     parser.add_argument("--optimizer", type=str, default="adam", choices=["sgd", "adam", "radam", "ranger"], help="Type of optimizer")
     parser.add_argument("--momentum", type=float, default=0.9, help="Momentum for the optimizer")
     parser.add_argument("--eps", type=float, default=1e-8, help="Stability term for numerical calculations")
@@ -130,8 +129,7 @@ def blend(args, device):
     src_out = prepare_inr(src_path, src_h, src_w, src_ch, True, device)
     tgt_out = prepare_inr(tgt_path, tgt_h, tgt_w, tgt_ch, True, device)
     bld_inr = prepare_inr(bld_path, src_h, src_w, src_ch, False, device)
-    filled_roi, cmb_grad_x, cmb_grad_y = blend_grads(src_out, tgt_out, p, roi, args.blend_mode)
-    # filled_roi, cmb_grad_x, cmb_grad_y = blend_grads_np(src_out, tgt_out, p, roi, args.blend_mode)
+    filled_roi, cmb_grad_x, cmb_grad_y = blend_grads(src_out, tgt_out, p, roi, args.blend_mode, use_numpy=args.use_numpy)
 
     # Prepare optimizer, scheduler
     optimizer = get_optimizer(args, bld_inr)
