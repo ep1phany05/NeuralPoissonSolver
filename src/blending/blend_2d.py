@@ -56,8 +56,7 @@ def prepare_params_and_logger(args):
     return tfb_writer, Logger, src_path, tgt_path, roi_path, cfg_path, bld_path
 
 
-def prepare_inr(model_path, h, w, ch, pretrained=True, device="cuda"):
-
+def prepare_inr(model_path: str, h: int, w: int, ch: int, pretrained: bool = True, device: str = "cuda"):
     if pretrained:
         model = DINER(hash_table_length=h * w, out_features=ch).to(device)
         model.load_pretrained(model_path, device)
@@ -72,7 +71,7 @@ def prepare_inr(model_path, h, w, ch, pretrained=True, device="cuda"):
 def config_parser():
     parser = configargparse.ArgumentParser()
 
-    # Path loading of varrois files and data
+    # Path loading of various files and data
     parser.add_argument("--config", is_config_file=True, help="Path to the common config file")
     parser.add_argument("--save_dir", type=str, default="results/2d/scene_1/", help="Path to save the blended inr")
     parser.add_argument("--root_dir", type=str, default="data/2d/scene_1/", help="Path to the pretrained data")
@@ -132,14 +131,13 @@ def blend(args, device):
     filled_roi, cmb_grad_x, cmb_grad_y = blend_grads(src_out, tgt_out, p, roi, args.blend_mode, use_numpy=args.use_numpy)
 
     # Prepare optimizer, scheduler
-    optimizer = get_optimizer(args, bld_inr)
+    optimizer = get_optimizer(args, bld_inr.parameters())
     scheduler = get_scheduler(args, optimizer)
 
     # Main blending loop
     total_time = 0.
-    start_epoch = -1
     best_loss, best_psnr, best_epoch = 1e8, 0., 0.
-    pbar = tqdm(range(start_epoch + 1, args.num_epochs), desc="Blending")
+    pbar = tqdm(range(1, args.num_epochs + 1), desc="Blending", dynamic_ncols=True)
     for epoch in pbar:
 
         start = torch.cuda.Event(enable_timing=True)
