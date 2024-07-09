@@ -38,113 +38,7 @@ def compute_grad(inr):
             }
 
 
-def combine_grads(src_grads, tgt_grads, roi, mode="max"):
-    """
-    Combine gradients of source and target inrs based on roi and mode.
-
-    Parameters
-    ----------
-    src_grads : tuple of torch.Tensor
-        Gradients (grad_x, grad_y) of the source inr.
-    tgt_grads : tuple of torch.Tensor
-        Gradients (grad_x, grad_y) of the target inr.
-    roi : torch.Tensor
-        Binary mask defining the domain where the target should be inserted.
-    mode : str, optional
-        Mode for combining gradients. Options are "replace", "average", "sum", "max".
-        Default is "max".
-
-    Returns
-    -------
-    cmb_grad_x : torch.Tensor
-        Combined gradient in the x direction.
-    cmb_grad_y : torch.Tensor
-        Combined gradient in the y direction.
-    """
-
-    roi = roi.permute(2, 0, 1).unsqueeze(0)  # [H, W, C] -> [1, C, H, W]
-    # roi = F.pad(roi, pad=[1, 1, 1, 1], mode='constant', value=0)
-    roi = erode_2d(roi, kernel_size=3).squeeze(0).permute(1, 2, 0)  # [1, C, H, W] -> [H, W, C]
-    # roi = roi[1:-1, 1:-1, :]
-
-    src_grad_x, src_grad_y = src_grads
-    tgt_grad_x, tgt_grad_y = tgt_grads
-    cmb_grad_x = src_grad_x.clone()
-    cmb_grad_y = src_grad_y.clone()
-
-    if mode == "replace":
-        cmb_grad_x[roi == 1] = tgt_grad_x[roi == 1]
-        cmb_grad_y[roi == 1] = tgt_grad_y[roi == 1]
-    elif mode == "average":
-        cmb_grad_x[roi == 1] = 0.5 * (tgt_grad_x[roi == 1] + src_grad_x[roi == 1])
-        cmb_grad_y[roi == 1] = 0.5 * (tgt_grad_y[roi == 1] + src_grad_y[roi == 1])
-    elif mode == "sum":
-        cmb_grad_x[roi == 1] = tgt_grad_x[roi == 1] + src_grad_x[roi == 1]
-        cmb_grad_y[roi == 1] = tgt_grad_y[roi == 1] + src_grad_y[roi == 1]
-    elif mode == "max":
-        roi_x = torch.abs(src_grad_x[roi == 1]) > torch.abs(tgt_grad_x[roi == 1])
-        roi_y = torch.abs(src_grad_y[roi == 1]) > torch.abs(tgt_grad_y[roi == 1])
-        cmb_grad_x[roi == 1] = src_grad_x[roi == 1] * roi_x.float() + tgt_grad_x[roi == 1] * (~roi_x).float()
-        cmb_grad_y[roi == 1] = src_grad_y[roi == 1] * roi_y.float() + tgt_grad_y[roi == 1] * (~roi_y).float()
-    else:
-        raise ValueError(f"Unknown mode: {mode}")
-
-    return cmb_grad_x, cmb_grad_y
-
-
-def combine_grads_np(src_grads, tgt_grads, roi, mode="max"):
-    """
-    Combine gradients of source and target inrs based on roi and mode.
-
-    Parameters
-    ----------
-    src_grads : list of np.array
-        Gradients (grad_x, grad_y) of the source inr.
-    tgt_grads : list of np.array
-        Gradients (grad_x, grad_y) of the target inr.
-    roi : torch.Tensor
-        Binary mask defining the domain where the target should be inserted.
-    mode : str, optional
-        Mode for combining gradients. Options are "replace", "average", "sum", "max".
-        Default is "max".
-
-    Returns
-    -------
-    cmb_grad_x : np.array
-        Combined gradient in the x direction.
-    cmb_grad_y : np.array
-        Combined gradient in the y direction.
-    """
-    # We will modify the set O = roi U d_roi
-    roi_pad = np.pad(roi, ((1, 1), (1, 1), (0, 0)), 'constant')
-    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))  # [MORPH_ELLIPSE, MORPH_CROSS, MORPH_RECT]
-    roi_pad = cv2.erode(roi_pad, kernel, 10)
-    roi_pad = roi_pad[1:-1, 1:-1, :]
-
-    cmb_grad_x = src_grads[0].copy()
-    cmb_grad_y = src_grads[1].copy()
-
-    if mode == 'replace':
-        cmb_grad_x[roi_pad == 1] = tgt_grads[0][roi_pad == 1]
-        cmb_grad_y[roi_pad == 1] = tgt_grads[1][roi_pad == 1]
-    if mode == 'average':
-        cmb_grad_x[roi_pad == 1] = 1 / 2 * (tgt_grads[0][roi_pad == 1] + src_grads[0][roi_pad == 1])
-        cmb_grad_y[roi_pad == 1] = 1 / 2 * (tgt_grads[1][roi_pad == 1] + src_grads[1][roi_pad == 1])
-    if mode == 'sum':
-        cmb_grad_x[roi_pad == 1] = tgt_grads[0][roi_pad == 1] + src_grads[0][roi_pad == 1]
-        cmb_grad_y[roi_pad == 1] = tgt_grads[1][roi_pad == 1] + src_grads[1][roi_pad == 1]
-    if mode == 'max':
-        roi_x = np.abs(src_grads[0][roi_pad == 1]) > np.abs(tgt_grads[0][roi_pad == 1])
-        roi_y = np.abs(src_grads[1][roi_pad == 1]) > np.abs(tgt_grads[1][roi_pad == 1])
-        cmb_grad_x[roi_pad == 1] = src_grads[0][roi_pad == 1] * roi_x + tgt_grads[0][roi_pad == 1] * (1 - roi_x)
-        cmb_grad_y[roi_pad == 1] = src_grads[1][roi_pad == 1] * roi_y + tgt_grads[1][roi_pad == 1] * (1 - roi_y)
-    else:
-        raise ValueError(f"Unknown mode: {mode}")
-
-    return cmb_grad_x, cmb_grad_y
-
-
-def combine_grads_new(src_grads, tgt_grads, roi, mode="max", use_numpy=False):
+def combine_grads(src_grads, tgt_grads, roi, mode="max", use_numpy=False):
     """
     Combine gradients of source and target inrs based on roi and mode.
 
@@ -256,7 +150,7 @@ def _convert_and_combine_grads(src_grads_dict, tgt_grads_dict, filled_roi, mode,
         for grad_type in grad_types:
             src_grads_np = [g.detach().cpu().numpy() for g in src_grads_dict[grad_type]]
             tgt_grads_np = [g.detach().cpu().numpy() for g in tgt_grads_dict[grad_type]]
-            cmb_grad_x_np, cmb_grad_y_np = combine_grads_new(src_grads_np, tgt_grads_np, filled_roi, mode, True)
+            cmb_grad_x_np, cmb_grad_y_np = combine_grads(src_grads_np, tgt_grads_np, filled_roi, mode, True)
             combined_grads_x.append(cmb_grad_x_np)
             combined_grads_y.append(cmb_grad_y_np)
 
@@ -266,7 +160,7 @@ def _convert_and_combine_grads(src_grads_dict, tgt_grads_dict, filled_roi, mode,
         for grad_type in grad_types:
             src_grads = src_grads_dict[grad_type]
             tgt_grads = tgt_grads_dict[grad_type]
-            cmb_grad_x, cmb_grad_y = combine_grads_new(src_grads, tgt_grads, filled_roi, mode, False)
+            cmb_grad_x, cmb_grad_y = combine_grads(src_grads, tgt_grads, filled_roi, mode, False)
             combined_grads_x.append(cmb_grad_x)
             combined_grads_y.append(cmb_grad_y)
 

@@ -4,41 +4,14 @@ import torch.nn.functional as F
 
 
 def to8b(x):
-    """
-    Convert a floating-point image array to 8-bit unsigned integer format.
-
-    Parameters:
-    x (numpy.ndarray): Input array with values in the range [0, 1].
-
-    Returns:
-    numpy.ndarray: Output array with values in the range [0, 255].
-    """
     return (255 * np.clip(x, 0, 1)).astype(np.uint8)
 
 
 def to16b(x):
-    """
-    Convert a floating-point image array to 16-bit unsigned integer format.
-
-    Parameters:
-    x (numpy.ndarray): Input array with values in the range [0, 1].
-
-    Returns:
-    numpy.ndarray: Output array with values in the range [0, 65535].
-    """
     return (65535 * np.clip(x, 0, 1)).astype(np.uint16)
 
 
 def to_matlab(arr):
-    """
-    Convert an image array to a format compatible with MATLAB.
-
-    Parameters:
-    arr (numpy.ndarray): Input array with values.
-
-    Returns:
-    numpy.ndarray: Output array clipped and cast to 8-bit unsigned integers.
-    """
     return np.uint8(np.clip(arr + 0.5, 0, 255))
 
 

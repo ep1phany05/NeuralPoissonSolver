@@ -51,8 +51,9 @@ TODO
 ```
 
 #### Scene blending
-```
-TODO
+```bash
+export PYTHONPATH=$(pwd)
+sh src/models/nerf/install_ext.sh
 ```
 
 ## Citation

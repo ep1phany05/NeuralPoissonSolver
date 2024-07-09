@@ -6,8 +6,18 @@ from src.models.diner import SineLayer
 
 
 class DINER(nn.Module):
-    def __init__(self, hash_mod=True, hash_table_length=512 * 512, in_features=3, hidden_features=64,
-                 hidden_layers=2, out_features=3, outermost_linear=True, first_omega_0=6.0, hidden_omega_0=6.0):
+    def __init__(
+            self,
+            hash_mod: bool = True,  # Whether to use hash table modulation.
+            hash_table_length: int = 512 * 512,  # Length of the hash table.
+            in_features: int = 3,  # Number of input features.
+            hidden_features: int = 64,  # Number of hidden units in each layer.
+            hidden_layers: int = 2,  # Number of hidden layers.
+            out_features: int = 3,  # Number of output features.
+            outermost_linear: bool = True,  # Whether the final layer is linear or a sine layer.
+            first_omega_0: float = 6.0,  # Frequency parameter for the first sine layer.
+            hidden_omega_0: float = 6.0  # Frequency parameter for the hidden sine layers.
+    ):
         super(DINER, self).__init__()
         self.hash_mod = hash_mod
         self.table = nn.Parameter(1e-4 * (torch.rand((hash_table_length, in_features)) * 2 - 1), requires_grad=True)

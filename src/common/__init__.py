@@ -5,15 +5,15 @@ from .optimizers import *
 from .warmup_scheduler import GradualWarmupScheduler
 
 
-def get_optimizer(hparams, model):
+def get_optimizer(hparams, grad_vars):
     if hparams.optimizer == 'sgd':
-        optimizer = SGD(model.parameters(), lr=hparams.lr, momentum=hparams.momentum, weight_decay=hparams.weight_decay)
+        optimizer = SGD(grad_vars, lr=hparams.lr, momentum=hparams.momentum, weight_decay=hparams.weight_decay)
     elif hparams.optimizer == 'adam':
-        optimizer = Adam(model.parameters(), lr=hparams.lr, eps=hparams.eps, weight_decay=hparams.weight_decay)
+        optimizer = Adam(grad_vars, lr=hparams.lr, eps=hparams.eps, weight_decay=hparams.weight_decay)
     elif hparams.optimizer == 'radam':
-        optimizer = RAdam(model.parameters(), lr=hparams.lr, eps=hparams.eps, weight_decay=hparams.weight_decay)
+        optimizer = RAdam(grad_vars, lr=hparams.lr, eps=hparams.eps, weight_decay=hparams.weight_decay)
     elif hparams.optimizer == 'ranger':
-        optimizer = Ranger(model.parameters(), lr=hparams.lr, eps=hparams.eps, weight_decay=hparams.weight_decay)
+        optimizer = Ranger(grad_vars, lr=hparams.lr, eps=hparams.eps, weight_decay=hparams.weight_decay)
     else:
         raise ValueError('optimizer not recognized!')
 
