@@ -3,13 +3,14 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau
 
 
 class GradualWarmupScheduler(_LRScheduler):
-    """ Gradually warm-up(increasing) learning rate in optimizer.
+    """
+    Gradually warm-up (increase) the learning rate in the optimizer.
     Proposed in 'Accurate, Large Minibatch SGD: Training ImageNet in 1 Hour'.
-    Args:
-        optimizer (Optimizer): Wrapped optimizer.
-        multiplier: target learning rate = base lr * multiplier
-        total_epoch: target learning rate is reached at total_epoch, gradually
-        after_scheduler: after target_epoch, use this scheduler(eg. ReduceLROnPlateau)
+
+    :param Optimizer optimizer: Wrapped optimizer.
+    :param float multiplier: Target learning rate multiplier (target learning rate = base lr * multiplier).
+    :param int total_epoch: Epoch by which the target learning rate is reached gradually.
+    :param object after_scheduler: Scheduler to use after reaching the target epoch (e.g., ReduceLROnPlateau).
     """
 
     def __init__(self, optimizer, multiplier, total_epoch, after_scheduler=None):

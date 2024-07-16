@@ -13,14 +13,15 @@ def l2_loss(network_output, gt):
 
 def solver_2d(model_out, roi, cmb_grad_x, cmb_grad_y, src, hyperparams=0.2):
     """
-    :param model_out: [H, W, C], the blended output tensor.
-    :param roi: [H, W, C], the Region of Interest (ROI) mask tensor.
-    :param cmb_grad_x: [H, W, C * 3], the x-partial derivative of the combined gradients.
-    :param cmb_grad_y: [H, W, C * 3], the y-partial derivative of the combined gradients.
-    :param src: [H, W, C], the source tensor.
-    :param hyperparams: Float, hyperparameter controlling the weighting of the color loss, default value is 0.2.
+    :param torch.Tensor model_out: [H, W, C], the blended output tensor.
+    :param torch.Tensor roi: [H, W, C], the Region of Interest (ROI) mask tensor.
+    :param torch.Tensor cmb_grad_x: [H, W, C * 3], the x-partial derivative of the combined gradients.
+    :param torch.Tensor cmb_grad_y: [H, W, C * 3], the y-partial derivative of the combined gradients.
+    :param torch.Tensor src: [H, W, C], the source tensor.
+    :param float hyperparams: Hyperparameter controlling the weighting of the color loss, default value is 0.2.
 
     :return: Dictionary containing the total loss, color loss, and gradient loss.
+    :rtype: dict
     """
 
     # Prepare reference regions
@@ -50,17 +51,18 @@ def solver_2d(model_out, roi, cmb_grad_x, cmb_grad_y, src, hyperparams=0.2):
 
 def solver_3d(bld, src, tgt, bld0=None, src0=None, tgt0=None, blend_mode="max", n_bounds=3, device="cuda"):
     """
-    :param bld: [H, W, C], the blended output tensor.
-    :param src: [H, W, C], the source tensor.
-    :param tgt: [H, W, C], the target tensor.
-    :param bld0: Optional; [H, W, C], blended output tensor for coarse model.
-    :param src0: Optional; [H, W, C], source tensor for coarse model.
-    :param tgt0: Optional; [H, W, C], target tensor for coarse model.
-    :param blend_mode: String, specifies the blending mode to be used, default is "max".
-    :param n_bounds: Integer, number of boundary pixels to pad, default is 3.
-    :param device: String, device to perform computations on, default is "cuda".
+    :param torch.Tensor bld: [H, W, C], the blended output tensor.
+    :param torch.Tensor src: [H, W, C], the source tensor.
+    :param torch.Tensor tgt: [H, W, C], the target tensor.
+    :param torch.Tensor bld0: Optional; [H, W, C], blended output tensor for coarse model.
+    :param torch.Tensor src0: Optional; [H, W, C], source tensor for coarse model.
+    :param torch.Tensor tgt0: Optional; [H, W, C], target tensor for coarse model.
+    :param str blend_mode: String, specifies the blending mode to be used, default is "max".
+    :param int n_bounds: Integer, number of boundary pixels to pad, default is 3.
+    :param str device: String, device to perform computations on, default is "cuda".
 
     :return: Dictionary containing the total loss, color loss, and gradient loss.
+    :rtype: dict
     """
 
     # Prepare roi

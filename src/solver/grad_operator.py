@@ -7,17 +7,12 @@ from src.solver import erode_2d
 
 def compute_grad(inr):
     """
-    Parameters
-    ----------
-    inr : torch.Tensor
-        Input inr tensor with shape [H, W, C] where C is the number of channels.
+    Calculate gradients of the input inr tensor in x and y directions.
 
-    Returns
-    -------
-    grad_x : torch.Tensor
-        Gradient of the inr in the x direction.
-    grad_y : torch.Tensor
-        Gradient of the inr in the y direction.
+    :param torch.Tensor inr: Input inr tensor with shape [H, W, C] where C is the number of channels.
+
+    :return: Gradient of the inr in the x direction and gradient of the inr in the y direction.
+    :rtype: tuple[torch.Tensor, torch.Tensor]
     """
 
     # Calculate forward gradients
@@ -42,26 +37,14 @@ def combine_grads(src_grads, tgt_grads, roi, mode="max", use_numpy=False):
     """
     Combine gradients of source and target inrs based on roi and mode.
 
-    Parameters
-    ----------
-    src_grads : tuple of torch.Tensor or list of np.array
-        Gradients (grad_x, grad_y) of the source inr.
-    tgt_grads : tuple of torch.Tensor or list of np.array
-        Gradients (grad_x, grad_y) of the target inr.
-    roi : torch.Tensor or np.array
-        Binary mask defining the domain where the target should be inserted.
-    mode : str, optional
-        Mode for combining gradients. Options are "replace", "average", "sum", "max".
-        Default is "max".
-    use_numpy : bool
-        Whether to use numpy for processing.
+    :param tuple[torch.Tensor] | list[np.array] src_grads: Gradients (grad_x, grad_y) of the source inr.
+    :param tuple[torch.Tensor] | list[np.array] tgt_grads: Gradients (grad_x, grad_y) of the target inr.
+    :param torch.Tensor | np.array roi: Binary mask defining the domain where the target should be inserted.
+    :param str mode: Mode for combining gradients. Options are "replace", "average", "sum", "max". Default is "max".
+    :param bool use_numpy: Whether to use numpy for processing.
 
-    Returns
-    -------
-    cmb_grad_x : torch.Tensor or np.array
-        Combined gradient in the x direction.
-    cmb_grad_y : torch.Tensor or np.array
-        Combined gradient in the y direction.
+    :return: Combined gradient in the x direction and combined gradient in the y direction.
+    :rtype: tuple[torch.Tensor | np.array, torch.Tensor | np.array]
     """
 
     if use_numpy:
@@ -171,31 +154,18 @@ def blend_grads(src, tgt, p, roi, mode, use_numpy=False):
     """
     Blend gradients of source and target inrs based on roi and specified mode.
 
-    Parameters
-    ----------
-    src : torch.Tensor
-        Source inr with [h, w, ch] and value range [0., 1.].
-    tgt : torch.Tensor
-        Target inr with [h, w, ch] and value range [0., 1.].
-    p : list
-        2D coordinates [x, y] indicating the position for blending.
-    roi : torch.Tensor
-        Binary mask tensor with [h, w] and value range [0, 255], defining where the target should be inserted.
-    mode : str
-        Mode for combining gradients. Options are "replace", "average", "sum", "max".
-    use_numpy : bool
-        Whether to use numpy and opencv for processing.
+    :param torch.Tensor src: Source inr with [h, w, ch] and value range [0., 1.].
+    :param torch.Tensor tgt: Target inr with [h, w, ch] and value range [0., 1.].
+    :param list p: 2D coordinates [x, y] indicating the position for blending.
+    :param torch.Tensor roi: Binary mask tensor with [h, w] and value range [0, 255], defining where the target should be inserted.
+    :param str mode: Mode for combining gradients. Options are "replace", "average", "sum", "max".
+    :param bool use_numpy: Whether to use numpy and opencv for processing.
 
-    Returns
-    -------
-    dict
-        Dictionary containing:
-        - 'roi' : torch.Tensor
-            roi mask tensor after reshaping and possible rolling.
-        - 'cmb_grad_x' : torch.Tensor
-            Combined gradient in the x direction.
-        - 'cmb_grad_y' : torch.Tensor
-            Combined gradient in the y direction.
+    :return: Dictionary containing:
+        - 'roi' (torch.Tensor): roi mask tensor after reshaping and possible rolling.
+        - 'cmb_grad_x' (torch.Tensor): Combined gradient in the x direction.
+        - 'cmb_grad_y' (torch.Tensor): Combined gradient in the y direction.
+    :rtype: dict
     """
 
     def tensor_to_numpy(tensor):
