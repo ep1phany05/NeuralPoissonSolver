@@ -18,13 +18,7 @@ pip install -r requirements.txt
 For 2D scene blending tasks, we employ [DINER](https://github.com/Ezio77/DINER) as the backbone network. 
 
 #### Data preparation
-You need to prepare the following data and place them in the `data/2d/` folder. Each blending scene should include:
-- `src.pth`: Source scene's INR model.
-- `tgt.pth`: Target scene's INR model.
-- `roi.png`: Blending region.
-- `cfg.npy`: Blending center coordinates.
-
-The directory structure should look like this:
+You need to prepare the following data and place them in the `data/2d/` folder. The directory structure should look like this:
 ```
 data/2d/
 ├── scene_1/
@@ -45,9 +39,15 @@ CUDA_VISIBLE_DEVICES=0 python src/blending/blend_2d.py --save_dir results/2d/sce
 For 3D scene blending tasks, we employ [NeRF](https://github.com/yenchenlin/nerf-pytorch) as the backbone network.
 
 #### Data preparation
-You need to prepare the following data and place them in the `data/3d/` folder. Each blending scene should include:
+You need to prepare the following data and place them in the `data/3d/` folder. The directory structure should look like this:
 ```
-TODO
+data/3d/
+├── scene_1/
+│   ├── src.tar          # Source scene's NeRF model
+│   ├── tgt.tar          # Target scene's NeRF model
+│   ├── roi.pt           # Blending region
+│   ├── cam.json         # Camera parameters
+└── ...
 ```
 
 #### Scene blending
@@ -59,5 +59,13 @@ CUDA_VISIBLE_DEVICES=0 python src/blending/blend_3d.py --save_dir results/3d/sce
 
 ## Citation
 ```
-TODO
+@misc{wu2024neuralpoissonsolveruniversal,
+      title={Neural Poisson Solver: A Universal and Continuous Framework for Natural Signal Blending}, 
+      author={Delong Wu and Hao Zhu and Qi Zhang and You Li and Zhan Ma and Xun Cao},
+      year={2024},
+      eprint={2407.08457},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2407.08457}, 
+}
 ```
