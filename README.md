@@ -38,7 +38,7 @@ data/2d/
 #### Scene blending
 ```bash
 export PYTHONPATH=$(pwd)
-python src/blending/blend_2d.py --save_dir results/2d/scene_1/ --root_dir data/2d/scene_1/ --use_numpy False
+CUDA_VISIBLE_DEVICES=0 python src/blending/blend_2d.py --save_dir results/2d/scene_1/ --root_dir data/2d/scene_1/ --use_numpy False
 ```
 
 ### 3D scene
@@ -54,6 +54,7 @@ TODO
 ```bash
 export PYTHONPATH=$(pwd)
 sh src/models/nerf/install_ext.sh
+CUDA_VISIBLE_DEVICES=0 python src/blending/blend_3d.py --save_dir results/3d/scene_1/ --root_dir data/3d/scene_1/
 ```
 
 ## Citation

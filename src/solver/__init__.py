@@ -45,3 +45,11 @@ def erode_2d(roi, kernel_size=5):
     torch.Tensor: The eroded tensor.
     """
     return 1 - dilate_2d(1 - roi, kernel_size)
+
+
+def upscale(input, scale_factor):
+    if scale_factor > 1:
+        input = input.permute(2, 0, 1).unsqueeze(0)
+        upscaled = F.interpolate(input, scale_factor=scale_factor, mode='bilinear', align_corners=True)
+        return upscaled.squeeze(0).permute(1, 2, 0)
+    return input

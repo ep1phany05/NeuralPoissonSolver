@@ -11,6 +11,6 @@ def get_encoder(encoding, input_dim=3, multires=6, degree=4):
         encoder = SHEncoder(input_dim=input_dim, degree=degree)
 
     else:
-        raise NotImplementedError("Unknown encoding mode, choose from [None, frequency, sphere_harmonics, hashgrid, tiledgrid]")
+        raise NotImplementedError("Unknown encoding mode, choose from [None, frequency, sphere_harmonics]")
 
     return encoder, encoder.output_dim
