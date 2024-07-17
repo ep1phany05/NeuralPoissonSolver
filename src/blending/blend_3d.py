@@ -106,7 +106,7 @@ def prepare_render_kwargs(args, near, far, roi, bld_models, src_models, tgt_mode
     render_kwargs_test = {k: render_kwargs_train[k] for k in render_kwargs_train}
     render_kwargs_test["perturb"] = False
     render_kwargs_test["raw_noise_std"] = 0.0
-    render_kwargs_test["render_in_roi"] = False  # TODO
+    render_kwargs_test["render_in_roi"] = False
 
     return render_kwargs_train, render_kwargs_test
 

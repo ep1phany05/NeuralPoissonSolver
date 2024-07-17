@@ -51,7 +51,7 @@ def create_sample_pose(zoom_low, zoom_high, sample_scale, hwf, K, roi):
     max_edge = torch.max(torch.tensor([roi_w, roi_h, roi_d], device=device))
     radius = max_edge / (2. * torch.tan(afov / 2.))
 
-    pose = pose_spherical(theta, phi, radius, 0., 0.)  # dx & dy must be 0.
+    pose = pose_spherical(theta, phi, radius, 0., 0.3)  # dx & dy must be 0.
 
     # Move pose according to center of scene
     pose[:3, -1] = pose[:3, -1] + roi_center
