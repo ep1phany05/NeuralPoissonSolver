@@ -1,4 +1,4 @@
-# Neural Poisson Solver: A Universal and Continuous Framework for Natural Signal Blending
+# [ECCV 2024]Neural Poisson Solver: A Universal and Continuous Framework for Natural Signal Blending
 PyTorch implementation of Neural Poisson Solver.
 
 ## Pipeline
