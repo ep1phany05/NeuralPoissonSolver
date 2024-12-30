@@ -1,4 +1,4 @@
-# Neural Poisson Solver: A Universal and Continuous Framework for Natural Signal Blending
+# [ECCV 2024] Neural Poisson Solver: A Universal and Continuous Framework for Natural Signal Blending
 PyTorch implementation of Neural Poisson Solver.
 
 ## Pipeline
@@ -59,14 +59,25 @@ CUDA_VISIBLE_DEVICES=0 python src/blending/blend_3d.py --save_dir results/3d/sce
 
 ## Citation
 ```
-@misc{wu2024neuralpoissonsolveruniversal,
-      title={Neural Poisson Solver: A Universal and Continuous Framework for Natural Signal Blending}, 
-      author={Delong Wu and Hao Zhu and Qi Zhang and You Li and Zhan Ma and Xun Cao},
-      year={2024},
-      eprint={2407.08457},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV},
-      url={https://arxiv.org/abs/2407.08457}, 
+@InProceedings{10.1007/978-3-031-72989-8_15,
+	author="Wu, Delong
+	and Zhu, Hao
+	and Zhang, Qi
+	and Li, You
+	and Ma, Zhan
+	and Cao, Xun",
+	editor="Leonardis, Ale{\v{s}}
+	and Ricci, Elisa
+	and Roth, Stefan
+	and Russakovsky, Olga
+	and Sattler, Torsten
+	and Varol, G{\"u}l",
+	title="Neural Poisson Solver: A Universal and Continuous Framework for Natural Signal Blending",
+	booktitle="Computer Vision -- ECCV 2024",
+	year="2025",
+	publisher="Springer Nature Switzerland",
+	address="Cham",
+	pages="259--275",
 }
 ```
 
