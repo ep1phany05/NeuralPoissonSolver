@@ -69,3 +69,6 @@ CUDA_VISIBLE_DEVICES=0 python src/blending/blend_3d.py --save_dir results/3d/sce
       url={https://arxiv.org/abs/2407.08457}, 
 }
 ```
+
+## License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
